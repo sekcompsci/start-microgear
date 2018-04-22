@@ -162,7 +162,7 @@ class App extends React.Component {
                     </Form>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#000' }}>
+                    {/* <Header style={{ background: '#000' }}>
                         <FormItem
                             {...headItemLayout}
                             label="Select"
@@ -174,12 +174,13 @@ class App extends React.Component {
                                 ],
                             })(
                                 <Select placeholder="Please select a country">
-                                    <Option value="china">China</Option>
-                                    <Option value="use">U.S.A</Option>
+                                    <Option value="esp8266">ESP8266</Option>
+                                    <Option value="arduino-wifi">Arduino (Wifi)</Option>
+                                    <Option value="arduino-lan">Arduino (Lan)</Option>
                                 </Select>
                             )}
                         </FormItem>
-                    </Header>
+                    </Header> */}
                     <Content className="content">
                         <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret} />
                     </Content>
