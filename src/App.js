@@ -1,11 +1,10 @@
 import React from 'react'
-import { Layout, Form, Input, Tooltip, Icon, Button, Select } from 'antd'
+import { Layout, Form, Input, Tooltip, Icon, Button } from 'antd'
 import ESP8266 from './devices/ESP8266'
 import './App.css'
 
-const { Sider, Header, Content } = Layout
+const { Sider, Content } = Layout;
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 class App extends React.Component {
     state = {
@@ -14,32 +13,32 @@ class App extends React.Component {
         appid: null,
         appkey: null,
         appsecret: null
-    }
+    };
 
     handleSSID = (e) => {
-        const val = e.target.value
+        const val = e.target.value;
         this.setState({ ssid: val })
-    }
+    };
 
     handlePASS = (e) => {
-        const val = e.target.value
+        const val = e.target.value;
         this.setState({ pass: val })
-    }
+    };
 
     handleAPPID = (e) => {
-        const val = e.target.value
+        const val = e.target.value;
         this.setState({ appid: val })
-    }
+    };
 
     handleKEY = (e) => {
-        const val = e.target.value
+        const val = e.target.value;
         this.setState({ appkey: val })
-    }
+    };
 
     handleSECRET = (e) => {
-        const val = e.target.value
+        const val = e.target.value;
         this.setState({ appsecret: val })
-    }
+    };
 
     clearState = () => {
         this.setState({
@@ -49,10 +48,10 @@ class App extends React.Component {
             appkey: null,
             appsecret: null
         })
-    }
+    };
 
     render() {
-        const { getFieldDecorator } = this.props.form
+        const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
                 xs: { offset: 1, span: 6 },
@@ -62,11 +61,7 @@ class App extends React.Component {
                 xs: { offset: 1, span: 6 },
                 sm: { offset: 2, span: 20 }
             },
-        }
-        const headItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 14 },
-        }
+        };
 
         return (
             <Layout className="layout">
@@ -87,7 +82,7 @@ class App extends React.Component {
                             {getFieldDecorator('ssid', {
                                 rules: [{ required: true, message: 'Please input your ssid!', whitespace: true }],
                             })(
-                                <Input value={this.state.ssid} onChange={this.handleSSID} />
+                                <Input value={this.state.ssid} onChange={this.handleSSID} autosize={false} />
                             )}
                         </FormItem>
                         <FormItem
@@ -104,7 +99,7 @@ class App extends React.Component {
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: 'Please input your password!', whitespace: true }],
                             })(
-                                <Input value={this.state.pass} onChange={this.handlePASS} />
+                                <Input value={this.state.pass} onChange={this.handlePASS} autosize={false} />
                             )}
                         </FormItem>
                         <FormItem
@@ -121,7 +116,7 @@ class App extends React.Component {
                             {getFieldDecorator('appid', {
                                 rules: [{ required: true, message: 'Please input your appid!', whitespace: true }],
                             })(
-                                <Input value={this.state.appid} onChange={this.handleAPPID} />
+                                <Input value={this.state.appid} onChange={this.handleAPPID} autosize={false} />
                             )}
                         </FormItem>
                         <FormItem
@@ -138,7 +133,7 @@ class App extends React.Component {
                             {getFieldDecorator('key', {
                                 rules: [{ required: true, message: 'Please input your key!', whitespace: true }],
                             })(
-                                <Input value={this.state.appkey} onChange={this.handleKEY} />
+                                <Input value={this.state.appkey} onChange={this.handleKEY} autosize={false} />
                             )}
                         </FormItem>
                         <FormItem
@@ -155,32 +150,13 @@ class App extends React.Component {
                             {getFieldDecorator('secret', {
                                 rules: [{ required: true, message: 'Please input your secret!', whitespace: true }],
                             })(
-                                <Input value={this.state.appsecret} onChange={this.handleSECRET} />
+                                <Input value={this.state.appsecret} onChange={this.handleSECRET} autosize={false} />
                             )}
                         </FormItem>
                         <Button type="danger" style={{ float: 'right', marginRight: '2rem' }} onClick={this.clearState} ghost>Clear</Button>
                     </Form>
                 </Sider>
                 <Layout>
-                    {/* <Header style={{ background: '#000' }}>
-                        <FormItem
-                            {...headItemLayout}
-                            label="Select"
-                            hasFeedback
-                        >
-                            {getFieldDecorator('select', {
-                                rules: [
-                                    { required: true, message: 'Please select your country!' },
-                                ],
-                            })(
-                                <Select placeholder="Please select a country">
-                                    <Option value="esp8266">ESP8266</Option>
-                                    <Option value="arduino-wifi">Arduino (Wifi)</Option>
-                                    <Option value="arduino-lan">Arduino (Lan)</Option>
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Header> */}
                     <Content className="content">
                         <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret} />
                     </Content>
