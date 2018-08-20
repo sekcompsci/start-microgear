@@ -3,9 +3,8 @@ import Highlight from '../Highlight'
 
 class ESP8266 extends React.Component {
     render() {
-        return (
-            Highlight('C++',
-                `/*  NETPIE ESP8266 basic sample                            */
+        let command = Highlight('C++',
+            `/*  NETPIE ESP8266 basic sample                            */
 /*  More information visit : https://netpie.io             */
 
 #include <ESP8266WiFi.h>
@@ -118,8 +117,9 @@ void loop() {
     }
     delay(100);
 }`
-            )
-        )
+        );
+
+        return command
     }
 }
 
