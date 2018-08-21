@@ -1,8 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { Layout, Form, Input, Tooltip, Icon, Button } from 'antd'
-import ESP8266 from './devices/ESP8266'
 import './App.css'
+
+import ESP8266 from './devices/ESP8266'
 
 const { Sider, Content } = Layout;
 const FormItem = Form.Item;
@@ -157,7 +159,7 @@ class App extends React.Component {
                             )}
                         </FormItem>
                         <Button type="danger" style={{ marginLeft: '2rem' }} onClick={this.clearState} ghost>Clear</Button>
-                        <CopyToClipboard text={this.state.value} onCopy={() => this.setState({copied: true})}>
+                        <CopyToClipboard text={this.props.command} onCopy={() => this.setState({copied: true})}>
                             <Button type="primary" style={{ float: 'right', marginRight: '2rem' }}>Copy</Button>
                         </CopyToClipboard>
                     </Form>
@@ -172,4 +174,10 @@ class App extends React.Component {
     }
 }
 
-export default Form.create()(App)
+const mapStateToProps = state => {
+    return {
+        command: state.command
+    }
+};
+
+export default connect(mapStateToProps)(Form.create()(App))

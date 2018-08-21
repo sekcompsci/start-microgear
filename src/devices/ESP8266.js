@@ -1,22 +1,32 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 import Highlight from '../Highlight'
+import {updateCommand} from '../redux/action';
 
 class ESP8266 extends React.Component {
-    render() {
-        let command = Highlight('C++',
-            `/*  NETPIE ESP8266 basic sample                            */
+    constructor(props) {
+        super(props);
+
+        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, "");
+
+        this.props.updateCommand(command);
+    }
+
+    genCommand = (ssid, pass, appid, appkey, appsecret, alias) => {
+        return `/*  NETPIE ESP8266 basic sample                            */
 /*  More information visit : https://netpie.io             */
 
 #include <ESP8266WiFi.h>
 #include <MicroGear.h>
 
-const char* ssid     = ${this.props.ssid ? '"' + this.props.ssid + '"' : '"WIFI_SSID"'};
-const char* password = ${this.props.pass ? '"' + this.props.pass + '"' : '"WIFI_KEY"'};
+const char* ssid     = ${ssid ? '"' + ssid + '"' : '"WIFI_SSID"'};
+const char* password = ${pass ? '"' + pass + '"' : '"WIFI_KEY"'};
 
-#define APPID   ${this.props.appid ? '"' + this.props.appid + '"' : '"APPID"'}
-#define KEY     ${this.props.appkey ? '"' + this.props.appkey + '"' : '"APPKEY"'}
-#define SECRET  ${this.props.appsecret ? '"' + this.props.appsecret + '"' : '"APPSECRET"'}
-#define ALIAS   ${this.props.appalias ? '"' + this.props.appalias + '"' : '"esp8266"'}
+#define APPID   ${appid ? '"' + appid + '"' : '"APPID"'}
+#define KEY     ${appkey ? '"' + appkey + '"' : '"APPKEY"'}
+#define SECRET  ${appsecret ? '"' + appsecret + '"' : '"APPSECRET"'}
+#define ALIAS   ${alias ? '"' + alias + '"' : '"esp8266"'}
 
 WiFiClient client;
 
@@ -117,10 +127,28 @@ void loop() {
     }
     delay(100);
 }`
-        );
+    };
 
-        return command
+    componentWillReceiveProps(newProps) {
+        if (this.props !== newProps) {
+            let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, "");
+            this.props.updateCommand(command);
+        }
+    }
+
+    render() {
+        return Highlight('C++', this.props.command);
     }
 }
 
-export default ESP8266
+const mapStateToProps = state => {
+    return {
+        command: state.command
+    }
+};
+
+const mapDispatchToProps = {
+    updateCommand
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ESP8266)
