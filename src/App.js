@@ -5,6 +5,7 @@ import {Button, Form, Icon, Input, Layout, Select, Tooltip} from 'antd'
 import './App.css'
 
 import ESP8266 from './devices/esp8266'
+import HTML from './devices/html'
 
 const {Sider, Content, Header} = Layout;
 const Option = Select.Option;
@@ -17,7 +18,8 @@ class App extends React.Component {
         appid: null,
         appkey: null,
         appsecret: null,
-        board: 'esp8266'
+        board: 'esp8266',
+        isWifi: true
     };
 
     handleSSID = (e) => {
@@ -41,6 +43,9 @@ class App extends React.Component {
     };
 
     handleMicrogear = (val) => {
+        if (val === 'esp8266') this.setState({isWifi: true});
+        else this.setState({isWifi: false});
+
         this.setState({board: val})
     };
 
@@ -72,17 +77,61 @@ class App extends React.Component {
 
         switch (this.state.board) {
             case 'esp8266': {
-                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
+                                         appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
                 break;
             }
             case 'html': {
-                microgearCode = "";
+                microgearCode =
+                    <HTML appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
 
                 break;
             }
             default: {
-                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
+                                         appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
             }
+        }
+
+        let wifiInput;
+
+        if (this.state.isWifi) {
+            wifiInput = <div>
+                <FormItem
+                    {...formItemLayout}
+                    label={(
+                        <span>
+                                    WIFI SSID &nbsp;
+                            <Tooltip title="Wifi name">
+                                        <Icon type="question-circle-o"/>
+                                    </Tooltip>
+                                </span>
+                    )}
+                >
+                    {getFieldDecorator('ssid', {
+                        rules: [{required: true, message: 'Please input your ssid!', whitespace: true}],
+                    })(
+                        <Input setfieldsvalue={this.state.ssid} onChange={this.handleSSID}/>
+                    )}
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                    label={(
+                        <span>
+                                    WIFI PASSWORD &nbsp;
+                            <Tooltip title="Wifi password">
+                                        <Icon type="question-circle-o"/>
+                                    </Tooltip>
+                                </span>
+                    )}
+                >
+                    {getFieldDecorator('password', {
+                        rules: [{required: true, message: 'Please input your password!', whitespace: true}],
+                    })(
+                        <Input setfieldsvalue={this.state.pass} onChange={this.handlePASS}/>
+                    )}
+                </FormItem>
+            </div>
         }
 
         return (
@@ -91,40 +140,7 @@ class App extends React.Component {
                     <img className="logo" src="https://netpie.io/public/netpieio/img/logo/netpie_logo_4.png"
                          alt="netpie"/>
                     <Form>
-                        <FormItem
-                            {...formItemLayout}
-                            label={(
-                                <span>
-                                    WIFI SSID &nbsp;
-                                    <Tooltip title="Wifi name">
-                                        <Icon type="question-circle-o"/>
-                                    </Tooltip>
-                                </span>
-                            )}
-                        >
-                            {getFieldDecorator('ssid', {
-                                rules: [{required: true, message: 'Please input your ssid!', whitespace: true}],
-                            })(
-                                <Input setfieldsvalue={this.state.ssid} onChange={this.handleSSID}/>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label={(
-                                <span>
-                                    WIFI PASSWORD &nbsp;
-                                    <Tooltip title="Wifi password">
-                                        <Icon type="question-circle-o"/>
-                                    </Tooltip>
-                                </span>
-                            )}
-                        >
-                            {getFieldDecorator('password', {
-                                rules: [{required: true, message: 'Please input your password!', whitespace: true}],
-                            })(
-                                <Input setfieldsvalue={this.state.pass} onChange={this.handlePASS}/>
-                            )}
-                        </FormItem>
+                        {wifiInput}
                         <FormItem
                             {...formItemLayout}
                             label={(
@@ -186,7 +202,7 @@ class App extends React.Component {
                             <Button type="primary" style={{float: 'right', marginRight: '1rem'}}>Copy</Button>
                         </CopyToClipboard>
                         <Select style={{width: '220px', float: 'right', marginRight: '1rem'}} defaultValue='esp8266'
-                                placeholder="Select another microgear" onChange={this.handleMicrogear}>
+                                placeholder="Please select microgear" onChange={this.handleMicrogear}>
                             <Option value="esp8266">esp8266</Option>
                             <Option value="html">html</Option>
                             <Option value="python">python</Option>

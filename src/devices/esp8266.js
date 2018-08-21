@@ -1,18 +1,10 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
-class Esp8266 extends React.Component {
-    constructor(props) {
-        super(props);
-
-        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, "");
-
-        this.props.updateCommand(command);
-    }
-
+class ESP8266 extends React.Component {
     genCommand = (ssid, pass, appid, appkey, appsecret, alias) => {
         return `/*  NETPIE ESP8266 basic sample                            */
 /*  More information visit : https://netpie.io             */
@@ -129,6 +121,14 @@ void loop() {
 }`
     };
 
+    constructor(props) {
+        super(props);
+
+        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, "");
+
+        this.props.updateCommand(command);
+    }
+
     componentWillReceiveProps(newProps) {
         if (this.props !== newProps) {
             let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, "");
@@ -151,4 +151,4 @@ const mapDispatchToProps = {
     updateCommand
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Esp8266)
+export default connect(mapStateToProps, mapDispatchToProps)(ESP8266)
