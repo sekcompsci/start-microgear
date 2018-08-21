@@ -19,7 +19,11 @@ class App extends React.Component {
         appkey: null,
         appsecret: null,
         board: 'esp8266',
-        isWifi: true
+        isWifi: true,
+        onConnect: true,
+        onMessage: true,
+        onFound: true,
+        onLost: true
     };
 
     handleSSID = (e) => {
@@ -192,6 +196,7 @@ class App extends React.Component {
                                 <Input setfieldsvalue={this.state.appsecret} onChange={this.handleSECRET}/>
                             )}
                         </FormItem>
+                        <a style={{fontSize: '1rem', marginLeft: '2rem'}}>Show more</a>
                         <Button type="danger" style={{float: 'right', marginRight: '2rem'}} onClick={this.clearState}
                                 ghost>Clear</Button>
                     </Form>
