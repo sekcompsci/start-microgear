@@ -16,37 +16,36 @@ class App extends React.Component {
         pass: null,
         appid: null,
         appkey: null,
-        appsecret: null
+        appsecret: null,
+        board: 'esp8266'
     };
 
     handleSSID = (e) => {
-        const val = e.target.value;
-        this.setState({ssid: val})
+        this.setState({ssid: e.target.value})
     };
 
     handlePASS = (e) => {
-        const val = e.target.value;
-        this.setState({pass: val})
+        this.setState({pass: e.target.value})
     };
 
     handleAPPID = (e) => {
-        const val = e.target.value;
-        this.setState({appid: val})
+        this.setState({appid: e.target.value})
     };
 
     handleKEY = (e) => {
-        const val = e.target.value;
-        this.setState({appkey: val})
+        this.setState({appkey: e.target.value})
     };
 
     handleSECRET = (e) => {
-        const val = e.target.value;
-        this.setState({appsecret: val})
+        this.setState({appsecret: e.target.value})
+    };
+
+    handleMicrogear = (val) => {
+        this.setState({board: val})
     };
 
     clearState = () => {
         this.props.form.resetFields();
-
         this.setState({
             ssid: null,
             pass: null,
@@ -68,6 +67,23 @@ class App extends React.Component {
                 sm: {offset: 2, span: 20}
             },
         };
+
+        let microgearCode;
+
+        switch (this.state.board) {
+            case 'esp8266': {
+                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                break;
+            }
+            case 'html': {
+                microgearCode = "";
+
+                break;
+            }
+            default: {
+                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+            }
+        }
 
         return (
             <Layout className="layout">
@@ -169,7 +185,8 @@ class App extends React.Component {
                         <CopyToClipboard text={this.props.command}>
                             <Button type="primary" style={{float: 'right', marginRight: '1rem'}}>Copy</Button>
                         </CopyToClipboard>
-                        <Select style={{width: '220px', float: 'right', marginRight: '1rem'}} placeholder="Select another microgear">
+                        <Select style={{width: '220px', float: 'right', marginRight: '1rem'}} defaultValue='esp8266'
+                                placeholder="Select another microgear" onChange={this.handleMicrogear}>
                             <Option value="esp8266">esp8266</Option>
                             <Option value="html">html</Option>
                             <Option value="python">python</Option>
@@ -178,8 +195,7 @@ class App extends React.Component {
                         </Select>
                     </Header>
                     <Content className="content">
-                        <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
-                                 appkey={this.state.appkey} appsecret={this.state.appsecret}/>
+                        {microgearCode}
                     </Content>
                 </Layout>
             </Layout>
