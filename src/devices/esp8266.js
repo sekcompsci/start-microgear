@@ -124,20 +124,20 @@ void loop() {
     constructor(props) {
         super(props);
 
-        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, "");
+        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, this.props.alias);
 
         this.props.updateCommand(command);
     }
 
     componentWillReceiveProps(newProps) {
         if (this.props !== newProps) {
-            let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, "");
+            let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, this.props.alias);
             this.props.updateCommand(command);
         }
     }
 
     render() {
-        return Highlight('C++', this.props.command);
+        return Highlight('c++', this.props.command);
     }
 }
 

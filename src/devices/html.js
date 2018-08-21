@@ -59,7 +59,7 @@ class HTML extends React.Component {
     }
 
     render() {
-        return Highlight('HTML', this.props.command);
+        return Highlight('html', this.props.command);
     }
 }
 
