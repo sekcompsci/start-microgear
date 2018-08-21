@@ -4,7 +4,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { Layout, Form, Input, Tooltip, Icon, Button } from 'antd'
 import './App.css'
 
-import ESP8266 from './devices/ESP8266'
+import ESP8266 from './devices/esp8266'
 
 const { Sider, Content } = Layout;
 const FormItem = Form.Item;
@@ -15,9 +15,7 @@ class App extends React.Component {
         pass: null,
         appid: null,
         appkey: null,
-        appsecret: null,
-        value: 'test copy!',
-        copied: false
+        appsecret: null
     };
 
     handleSSID = (e) => {
@@ -46,6 +44,8 @@ class App extends React.Component {
     };
 
     clearState = () => {
+        this.props.form.resetFields();
+
         this.setState({
             ssid: null,
             pass: null,
@@ -159,7 +159,7 @@ class App extends React.Component {
                             )}
                         </FormItem>
                         <Button type="danger" style={{ marginLeft: '2rem' }} onClick={this.clearState} ghost>Clear</Button>
-                        <CopyToClipboard text={this.props.command} onCopy={() => this.setState({copied: true})}>
+                        <CopyToClipboard text={this.props.command}>
                             <Button type="primary" style={{ float: 'right', marginRight: '2rem' }}>Copy</Button>
                         </CopyToClipboard>
                     </Form>

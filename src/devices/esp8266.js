@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
-class ESP8266 extends React.Component {
+class Esp8266 extends React.Component {
     constructor(props) {
         super(props);
 
@@ -151,4 +151,4 @@ const mapDispatchToProps = {
     updateCommand
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ESP8266)
+export default connect(mapStateToProps, mapDispatchToProps)(Esp8266)
