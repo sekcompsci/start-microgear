@@ -15,7 +15,7 @@ class HTML extends React.Component {
     var microgear = Microgear.create({
         key: APPKEY,
         secret: APPSECRET,
-        alias : ${alias ? '"' + alias + '"' : '"html"'}         /*  optional  */
+        alias : ${alias ? '"' + alias + '"' : '"htmlgear"'}         /*  optional  */
     });
     
     microgear.on('message',function(topic,msg) {
