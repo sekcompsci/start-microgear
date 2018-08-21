@@ -1,7 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { Layout, Form, Input, Tooltip, Icon, Button } from 'antd'
-import ESP8266 from './devices/ESP8266'
 import './App.css'
+
+import ESP8266 from './devices/esp8266'
 
 const { Sider, Content } = Layout;
 const FormItem = Form.Item;
@@ -41,6 +44,8 @@ class App extends React.Component {
     };
 
     clearState = () => {
+        this.props.form.resetFields();
+
         this.setState({
             ssid: null,
             pass: null,
@@ -82,7 +87,7 @@ class App extends React.Component {
                             {getFieldDecorator('ssid', {
                                 rules: [{ required: true, message: 'Please input your ssid!', whitespace: true }],
                             })(
-                                <Input value={this.state.ssid} onChange={this.handleSSID} autosize={false} />
+                                <Input setfieldsvalue={this.state.ssid} onChange={this.handleSSID} />
                             )}
                         </FormItem>
                         <FormItem
@@ -99,7 +104,7 @@ class App extends React.Component {
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: 'Please input your password!', whitespace: true }],
                             })(
-                                <Input value={this.state.pass} onChange={this.handlePASS} autosize={false} />
+                                <Input setfieldsvalue={this.state.pass} onChange={this.handlePASS} />
                             )}
                         </FormItem>
                         <FormItem
@@ -116,7 +121,7 @@ class App extends React.Component {
                             {getFieldDecorator('appid', {
                                 rules: [{ required: true, message: 'Please input your appid!', whitespace: true }],
                             })(
-                                <Input value={this.state.appid} onChange={this.handleAPPID} autosize={false} />
+                                <Input setfieldsvalue={this.state.appid} onChange={this.handleAPPID} />
                             )}
                         </FormItem>
                         <FormItem
@@ -133,7 +138,7 @@ class App extends React.Component {
                             {getFieldDecorator('key', {
                                 rules: [{ required: true, message: 'Please input your key!', whitespace: true }],
                             })(
-                                <Input value={this.state.appkey} onChange={this.handleKEY} autosize={false} />
+                                <Input setfieldsvalue={this.state.appkey} onChange={this.handleKEY} />
                             )}
                         </FormItem>
                         <FormItem
@@ -150,10 +155,13 @@ class App extends React.Component {
                             {getFieldDecorator('secret', {
                                 rules: [{ required: true, message: 'Please input your secret!', whitespace: true }],
                             })(
-                                <Input value={this.state.appsecret} onChange={this.handleSECRET} autosize={false} />
+                                <Input setfieldsvalue={this.state.appsecret} onChange={this.handleSECRET} />
                             )}
                         </FormItem>
-                        <Button type="danger" style={{ float: 'right', marginRight: '2rem' }} onClick={this.clearState} ghost>Clear</Button>
+                        <Button type="danger" style={{ marginLeft: '2rem' }} onClick={this.clearState} ghost>Clear</Button>
+                        <CopyToClipboard text={this.props.command}>
+                            <Button type="primary" style={{ float: 'right', marginRight: '2rem' }}>Copy</Button>
+                        </CopyToClipboard>
                     </Form>
                 </Sider>
                 <Layout>
@@ -166,4 +174,10 @@ class App extends React.Component {
     }
 }
 
-export default Form.create()(App)
+const mapStateToProps = state => {
+    return {
+        command: state.command
+    }
+};
+
+export default connect(mapStateToProps)(Form.create()(App))
