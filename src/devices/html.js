@@ -5,6 +5,21 @@ import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
 class HTML extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let command = this.genCommand(this.props.appid, this.props.appkey, this.props.appsecret, this.props.appalias);
+
+        this.props.updateCommand(command);
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props !== newProps) {
+            let command = this.genCommand(newProps.appid, newProps.appkey, newProps.appsecret, newProps.appalias);
+            this.props.updateCommand(command);
+        }
+    }
+
     genCommand = (appid, appkey, appsecret, alias) => {
         return `<script src="https://cdn.netpie.io/microgear.js"></script>
 <script>
@@ -42,21 +57,6 @@ class HTML extends React.Component {
 
 <div id="data">_____</div>`
     };
-
-    constructor(props) {
-        super(props);
-
-        let command = this.genCommand(this.props.appid, this.props.appkey, this.props.appsecret, "");
-
-        this.props.updateCommand(command);
-    }
-
-    componentWillReceiveProps(newProps) {
-        if (this.props !== newProps) {
-            let command = this.genCommand(newProps.appid, newProps.appkey, newProps.appsecret, "");
-            this.props.updateCommand(command);
-        }
-    }
 
     render() {
         return Highlight('html', this.props.command);

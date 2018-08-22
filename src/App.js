@@ -1,15 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {Button, Form, Icon, Input, Layout, Select, Tooltip} from 'antd'
+import {Button, Checkbox, Form, Icon, Input, Layout, Select, Tooltip} from 'antd'
 import './App.css'
 
 import ESP8266 from './devices/esp8266'
 import HTML from './devices/html'
+import PYTHON from './devices/python'
 
 const {Sider, Content, Header} = Layout;
 const Option = Select.Option;
 const FormItem = Form.Item;
+const CheckboxGroup = Checkbox.Group;
 
 class App extends React.Component {
     state = {
@@ -18,12 +20,15 @@ class App extends React.Component {
         appid: null,
         appkey: null,
         appsecret: null,
+        appalias: null,
         board: 'esp8266',
         isWifi: true,
+        event: [],
         onConnect: true,
         onMessage: true,
         onFound: true,
-        onLost: true
+        onLost: true,
+        hide: true
     };
 
     handleSSID = (e) => {
@@ -46,11 +51,20 @@ class App extends React.Component {
         this.setState({appsecret: e.target.value})
     };
 
+    handleAlias = (e) => {
+        this.setState({appalias: e.target.value})
+    };
+
     handleMicrogear = (val) => {
         if (val === 'esp8266') this.setState({isWifi: true});
         else this.setState({isWifi: false});
 
         this.setState({board: val})
+    };
+
+    handleEvent = (val) => {
+        console.log(val);
+        this.setState({})
     };
 
     clearState = () => {
@@ -60,7 +74,8 @@ class App extends React.Component {
             pass: null,
             appid: null,
             appkey: null,
-            appsecret: null
+            appsecret: null,
+            appalias: null
         })
     };
 
@@ -76,24 +91,40 @@ class App extends React.Component {
                 sm: {offset: 2, span: 20}
             },
         };
+        const plainOptions = [
+            {label: 'onConnected', value: 'connect'},
+            {label: 'onMessage', value: 'message'},
+            {label: 'onFoundGear', value: 'found'},
+            {label: 'onLostGear', value: 'lost'}
+        ];
 
         let microgearCode;
 
         switch (this.state.board) {
             case 'esp8266': {
                 microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
-                                         appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                                         appkey={this.state.appkey} appsecret={this.state.appsecret}
+                                         appalias={this.state.appalias}/>;
                 break;
             }
             case 'html': {
                 microgearCode =
-                    <HTML appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                    <HTML appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
+                          appalias={this.state.appalias}/>;
+
+                break;
+            }
+            case 'python': {
+                microgearCode =
+                    <PYTHON appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
+                            appalias={this.state.appalias}/>;
 
                 break;
             }
             default: {
                 microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
-                                         appkey={this.state.appkey} appsecret={this.state.appsecret}/>;
+                                         appkey={this.state.appkey} appsecret={this.state.appsecret}
+                                         appalias={this.state.appalias}/>;
             }
         }
 
@@ -196,7 +227,43 @@ class App extends React.Component {
                                 <Input setfieldsvalue={this.state.appsecret} onChange={this.handleSECRET}/>
                             )}
                         </FormItem>
-                        <a style={{fontSize: '1rem', marginLeft: '2rem'}}>Show more</a>
+                        {this.state.hide ? null : <div>
+                            <FormItem
+                                {...formItemLayout}
+                                label={(
+                                    <span>
+                                    NETPIE ALIAS &nbsp;
+                                        <Tooltip title="like device nickname">
+                                        <Icon type="question-circle-o"/>
+                                    </Tooltip>
+                                </span>
+                                )}
+                            >
+                                {getFieldDecorator('alias')(<Input setfieldsvalue={this.state.appalias}
+                                                                   onChange={this.handleAlias}/>)}
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label={(
+                                    <span>
+                                    NETPIE EVENTS &nbsp;
+                                        <Tooltip title="add event on action">
+                                        <Icon type="question-circle-o"/>
+                                    </Tooltip>
+                                </span>
+                                )}
+                            >
+                                {getFieldDecorator('event', {
+                                    option: {initialValue:['lost']}
+                                })(<CheckboxGroup style={{color: '#FFF'}}
+                                                                           options={plainOptions}
+                                                                           onChange={this.handleEvent}
+                                    />
+                                )}
+                            </FormItem>
+                        </div>}
+                        <a style={{fontSize: '1rem', marginLeft: '2rem'}}
+                           onClick={() => this.setState({hide: !this.state.hide})}>{this.state.hide ? "Show more" : "Show less"}</a>
                         <Button type="danger" style={{float: 'right', marginRight: '2rem'}} onClick={this.clearState}
                                 ghost>Clear</Button>
                     </Form>
@@ -211,8 +278,8 @@ class App extends React.Component {
                             <Option value="esp8266">esp8266</Option>
                             <Option value="html">html</Option>
                             <Option value="python">python</Option>
-                            <Option value="nodeJS">nodeJS</Option>
-                            <Option value="nb-iot">nb-iot</Option>
+                            {/*<Option value="nodeJS">nodeJS</Option>*/}
+                            {/*<Option value="nb-iot">nb-iot</Option>*/}
                         </Select>
                     </Header>
                     <Content className="content">

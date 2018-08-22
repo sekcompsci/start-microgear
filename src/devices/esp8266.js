@@ -5,6 +5,20 @@ import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
 class ESP8266 extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, this.props.appalias);
+        this.props.updateCommand(command);
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props !== newProps) {
+            let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, newProps.appalias);
+            this.props.updateCommand(command);
+        }
+    }
+
     genCommand = (ssid, pass, appid, appkey, appsecret, alias) => {
         return `/*  NETPIE ESP8266 basic sample                            */
 /*  More information visit : https://netpie.io             */
@@ -120,21 +134,6 @@ void loop() {
     delay(100);
 }`
     };
-
-    constructor(props) {
-        super(props);
-
-        let command = this.genCommand(this.props.ssid, this.props.pass, this.props.appid, this.props.appkey, this.props.appsecret, this.props.alias);
-
-        this.props.updateCommand(command);
-    }
-
-    componentWillReceiveProps(newProps) {
-        if (this.props !== newProps) {
-            let command = this.genCommand(newProps.ssid, newProps.pass, newProps.appid, newProps.appkey, newProps.appsecret, this.props.alias);
-            this.props.updateCommand(command);
-        }
-    }
 
     render() {
         return Highlight('c++', this.props.command);
