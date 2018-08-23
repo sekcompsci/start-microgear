@@ -1,7 +1,7 @@
 start-microgear
 ==========
 
-easy way to crate code microgear
+easy way to create code microgear
 
 website: [https://sekcompsci.github.io/start-microgear](https://sekcompsci.github.io/start-microgear/).
 
