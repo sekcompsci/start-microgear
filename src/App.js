@@ -4,9 +4,9 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {Button, Checkbox, Form, Icon, Input, Layout, Select, Tooltip} from 'antd'
 import './App.css'
 
-import ESP8266 from './devices/esp8266'
-import HTML from './devices/html'
-import PYTHON from './devices/python'
+import ESP8266 from './devices/Esp8266'
+import HTML from './devices/Html'
+import PYTHON from './devices/Python'
 
 const {Sider, Content, Header} = Layout;
 const Option = Select.Option;
@@ -24,10 +24,7 @@ class App extends React.Component {
         board: 'esp8266',
         isWifi: true,
         event: [],
-        onConnect: true,
-        onMessage: true,
-        onFound: true,
-        onLost: true,
+        events: ['connect', 'message', 'found', 'lost'],
         hide: true
     };
 
@@ -63,8 +60,7 @@ class App extends React.Component {
     };
 
     handleEvent = (val) => {
-        console.log(val);
-        this.setState({})
+        this.setState({events: val})
     };
 
     clearState = () => {
@@ -104,27 +100,27 @@ class App extends React.Component {
             case 'esp8266': {
                 microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
                                          appkey={this.state.appkey} appsecret={this.state.appsecret}
-                                         appalias={this.state.appalias}/>;
+                                         appalias={this.state.appalias} appevents={this.state.events}/>;
                 break;
             }
             case 'html': {
                 microgearCode =
                     <HTML appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
-                          appalias={this.state.appalias}/>;
+                          appalias={this.state.appalias} appevents={this.state.events}/>;
 
                 break;
             }
             case 'python': {
                 microgearCode =
                     <PYTHON appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
-                            appalias={this.state.appalias}/>;
+                            appalias={this.state.appalias} appevents={this.state.events}/>;
 
                 break;
             }
             default: {
                 microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
                                          appkey={this.state.appkey} appsecret={this.state.appsecret}
-                                         appalias={this.state.appalias}/>;
+                                         appalias={this.state.appalias} appevents={this.state.events}/>;
             }
         }
 
@@ -253,11 +249,10 @@ class App extends React.Component {
                                 </span>
                                 )}
                             >
-                                {getFieldDecorator('event', {
-                                    option: {initialValue:['lost']}
-                                })(<CheckboxGroup style={{color: '#FFF'}}
-                                                                           options={plainOptions}
-                                                                           onChange={this.handleEvent}
+                                {getFieldDecorator('event', {initialValue: ['connect', 'message', 'found', 'lost']})(
+                                    <CheckboxGroup style={{color: '#FFF'}}
+                                                   options={plainOptions}
+                                                   onChange={this.handleEvent}
                                     />
                                 )}
                             </FormItem>

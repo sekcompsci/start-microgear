@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
-class PYTHON extends React.Component {
+class Python extends React.Component {
     constructor(props) {
         super(props);
 
@@ -70,4 +70,4 @@ const mapDispatchToProps = {
     updateCommand
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PYTHON)
+export default connect(mapStateToProps, mapDispatchToProps)(Python)

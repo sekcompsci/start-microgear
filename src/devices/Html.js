@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
-class HTML extends React.Component {
+class Html extends React.Component {
     constructor(props) {
         super(props);
 
@@ -73,4 +73,4 @@ const mapDispatchToProps = {
     updateCommand
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HTML)
+export default connect(mapStateToProps, mapDispatchToProps)(Html)
