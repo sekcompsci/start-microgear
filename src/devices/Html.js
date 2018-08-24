@@ -5,22 +5,21 @@ import Highlight from '../Highlight'
 import {updateCommand} from '../redux/action';
 
 class Html extends React.Component {
-    constructor(props) {
-        super(props);
-
-        let command = this.genCommand(this.props.appid, this.props.appkey, this.props.appsecret, this.props.appalias);
-
-        this.props.updateCommand(command);
+    componentWillMount() {
+        this.initCode(this.props);
     }
 
     componentWillReceiveProps(newProps) {
-        if (this.props !== newProps) {
-            let command = this.genCommand(newProps.appid, newProps.appkey, newProps.appsecret, newProps.appalias);
-            this.props.updateCommand(command);
-        }
+        this.initCode(newProps);
     }
 
-    genCommand = (appid, appkey, appsecret, alias) => {
+    initCode = (newProps) => {
+        this.props.updateCommand(
+            this.genCommand(newProps)
+        );
+    };
+
+    genCommand = ({appid, appkey, appsecret, appalias, eventConnect, eventMessage, eventFound, eventLost}) => {
         return `<script src="https://cdn.netpie.io/microgear.js"></script>
 <script>
     const APPID     = ${appid ? '"' + appid + '"' : '"APPID"'};
@@ -30,27 +29,24 @@ class Html extends React.Component {
     var microgear = Microgear.create({
         key: APPKEY,
         secret: APPSECRET,
-        alias : ${alias ? '"' + alias + '"' : '"htmlgear"'}         /*  optional  */
+        alias : ${appalias ? '"' + appalias + '"' : '"htmlgear"'}         /*  optional  */
     });
     
-    microgear.on('message',function(topic,msg) {
-        document.getElementById("data").innerHTML = msg;
-    });
-    
-    microgear.on('connected', function() {
+    ${eventConnect?`microgear.on('connected', function() {
         document.getElementById("data").innerHTML = "Now I am connected with netpie...";
         setInterval(function() {
             microgear.chat("htmlgear","Hello from myself at "+Date.now());
         },5000);
-    });
-    
-    microgear.on('present', function(event) {
+    });`:''}
+    ${eventMessage?`microgear.on('message',function(topic,msg) {
+        document.getElementById("data").innerHTML = msg;
+    });`:''}
+    ${eventFound?`microgear.on('present', function(event) {
         console.log(event);
-    });
-    
-    microgear.on('absent', function(event) {
+    });`:''}
+    ${eventLost?`microgear.on('absent', function(event) {
         console.log(event);
-    });
+    });`:''}
     
     microgear.connect(APPID);
 </script>
