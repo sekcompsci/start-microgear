@@ -7,6 +7,7 @@ import './App.css'
 import ESP8266 from './devices/Esp8266'
 import HTML from './devices/Html'
 import PYTHON from './devices/Python'
+import {updateEvents} from "./redux/action";
 
 const {Sider, Content, Header} = Layout;
 const Option = Select.Option;
@@ -23,44 +24,58 @@ class App extends React.Component {
         appalias: null,
         board: 'esp8266',
         isWifi: true,
-        event: [],
-        events: ['connect', 'message', 'found', 'lost'],
-        hide: true
+        hide: true,
+        eventConnect: true,
+        eventMessage: true,
+        eventFound: true,
+        eventLost: true,
     };
 
     handleSSID = (e) => {
-        this.setState({ssid: e.target.value})
+        this.setState({ssid: e.target.value});
     };
 
     handlePASS = (e) => {
-        this.setState({pass: e.target.value})
+        this.setState({pass: e.target.value});
     };
 
     handleAPPID = (e) => {
-        this.setState({appid: e.target.value})
+        this.setState({appid: e.target.value});
     };
 
     handleKEY = (e) => {
-        this.setState({appkey: e.target.value})
+        this.setState({appkey: e.target.value});
     };
 
     handleSECRET = (e) => {
-        this.setState({appsecret: e.target.value})
+        this.setState({appsecret: e.target.value});
     };
 
     handleAlias = (e) => {
-        this.setState({appalias: e.target.value})
+        this.setState({appalias: e.target.value});
     };
 
     handleMicrogear = (val) => {
         if (val === 'esp8266') this.setState({isWifi: true});
         else this.setState({isWifi: false});
 
-        this.setState({board: val})
+        this.setState({board: val});
     };
 
     handleEvent = (val) => {
-        this.setState({events: val})
+        this.setState({
+            eventConnect: false,
+            eventMessage: false,
+            eventFound: false,
+            eventLost: false,
+        });
+
+        for (let i = 0; i < val.length; i++) {
+            if (val[i] === 'connect') this.setState({eventConnect: true});
+            else if (val[i] === 'message') this.setState({eventMessage: true});
+            else if (val[i] === 'found') this.setState({eventFound: true});
+            else if (val[i] === 'lost') this.setState({eventLost: true});
+        }
     };
 
     clearState = () => {
@@ -71,7 +86,11 @@ class App extends React.Component {
             appid: null,
             appkey: null,
             appsecret: null,
-            appalias: null
+            appalias: null,
+            eventConnect: true,
+            eventMessage: true,
+            eventFound: true,
+            eventLost: true,
         })
     };
 
@@ -98,29 +117,52 @@ class App extends React.Component {
 
         switch (this.state.board) {
             case 'esp8266': {
-                microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
-                                         appkey={this.state.appkey} appsecret={this.state.appsecret}
-                                         appalias={this.state.appalias} appevents={this.state.events}/>;
+                microgearCode = <ESP8266
+                    ssid={this.state.ssid}
+                    pass={this.state.pass}
+                    appid={this.state.appid}
+                    appkey={this.state.appkey}
+                    appsecret={this.state.appsecret}
+                    appalias={this.state.appalias}
+                    eventConnect={this.state.eventConnect}
+                    eventMessage={this.state.eventMessage}
+                    eventFound={this.state.eventFound}
+                    eventLost={this.state.eventLost}
+                />;
                 break;
             }
             case 'html': {
-                microgearCode =
-                    <HTML appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
-                          appalias={this.state.appalias} appevents={this.state.events}/>;
-
+                microgearCode = <HTML
+                    appid={this.state.appid}
+                    appkey={this.state.appkey}
+                    appsecret={this.state.appsecret}
+                    appalias={this.state.appalias}
+                    eventConnect={this.state.eventConnect}
+                    eventMessage={this.state.eventMessage}
+                    eventFound={this.state.eventFound}
+                    eventLost={this.state.eventLost}
+                />;
                 break;
             }
             case 'python': {
                 microgearCode =
-                    <PYTHON appid={this.state.appid} appkey={this.state.appkey} appsecret={this.state.appsecret}
-                            appalias={this.state.appalias} appevents={this.state.events}/>;
+                    <PYTHON
+                        appid={this.state.appid}
+                        appkey={this.state.appkey}
+                        appsecret={this.state.appsecret}
+                        appalias={this.state.appalias}
+                        eventConnect={this.state.eventConnect}
+                        eventMessage={this.state.eventMessage}
+                        eventFound={this.state.eventFound}
+                        eventLost={this.state.eventLost}
+                    />;
 
                 break;
             }
             default: {
                 microgearCode = <ESP8266 ssid={this.state.ssid} pass={this.state.pass} appid={this.state.appid}
                                          appkey={this.state.appkey} appsecret={this.state.appsecret}
-                                         appalias={this.state.appalias} appevents={this.state.events}/>;
+                                         appalias={this.state.appalias}/>;
             }
         }
 
@@ -286,10 +328,14 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({command}) => {
     return {
-        command: state.command
+        command
     }
 };
 
-export default connect(mapStateToProps)(Form.create()(App))
+const mapDispatchToProps = {
+    updateEvents
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(App))
