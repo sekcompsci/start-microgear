@@ -307,6 +307,7 @@ class App extends React.Component {
                 </Sider>
                 <Layout>
                     <Header style={{background: '#fff', height: '50px', padding: '10px 0'}}>
+                        <b>V1.0.0</b>
                         <CopyToClipboard text={this.props.command}>
                             <Button type="primary" style={{float: 'right', marginRight: '1rem'}}>Copy</Button>
                         </CopyToClipboard>
